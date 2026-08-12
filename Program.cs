@@ -6,6 +6,7 @@ using InputWeb.Domain.Entities;
 using InputWeb.Domain.Interfaces;
 using InputWeb.Infrastructure.Data;
 using InputWeb.Infrastructure.Repositories;
+using InputWeb.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,15 +20,18 @@ builder.Services.AddDbContext<Context>(options =>
 
 //common
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IFileStorage, AzureBlobStorage>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.AddScoped<PasswordHasher<User>>();
 
 //repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 
 //usecases
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUseCase>();
 builder.Services.AddScoped<IAuthenticateUseCase, AuthenticateUseCase>();
+builder.Services.AddScoped<ICreateRecordingUseCase, CreateRecordingUseCase>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrWhiteSpace(jwtKey))

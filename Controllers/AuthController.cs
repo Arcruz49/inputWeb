@@ -45,4 +45,13 @@ public class AuthController(IAuthenticateUseCase authenticateUseCase, IRegisterU
 
         return Ok(result);
     }
+
+    [Authorize]
+    [HttpGet("me")]
+    public IActionResult Me()
+    {
+        var name = User.FindFirstValue(ClaimTypes.Name);
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(new { id, name });
+    }
 }
