@@ -8,7 +8,7 @@ using InputWeb.Application.UseCases;
 
 namespace InputWeb.Controllers;
 
-//[Authorize] remover depois de testar ne pae
+[Authorize]
 [Route("Record")]
 public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IGetRecordByIdUseCase getRecordByIdUseCase,
     GetRecordsUseCase getRecordsUseCase) : BaseController
