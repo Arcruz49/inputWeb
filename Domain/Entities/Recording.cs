@@ -26,6 +26,9 @@ public class Recording
     [Column("events_url")]
     public string EventsUrl { get; set; } = string.Empty;
 
+    [Column("hash")]
+    public string Hash { get; set; } = string.Empty;
+
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
 }
