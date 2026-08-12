@@ -1,10 +1,13 @@
 using System.Text;
 using InputWeb.Application.Interfaces;
+using InputWeb.Application.Security;
 using InputWeb.Application.UseCases;
+using InputWeb.Domain.Entities;
 using InputWeb.Domain.Interfaces;
 using InputWeb.Infrastructure.Data;
 using InputWeb.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,6 +19,8 @@ builder.Services.AddDbContext<Context>(options =>
 
 //common
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<JwtTokenGenerator>();
+builder.Services.AddScoped<PasswordHasher<User>>();
 
 //repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -24,9 +29,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUseCase>();
 builder.Services.AddScoped<IAuthenticateUseCase, AuthenticateUseCase>();
 
-
-var jwtKey = builder.Configuration["Jwt:Key"]
-    ?? throw new Exception("JWT Key not configured");
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey))
+    throw new Exception("JWT Key not configured");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
