@@ -1,5 +1,9 @@
 using System.Text;
+using InputWeb.Application.Interfaces;
+using InputWeb.Application.UseCases;
+using InputWeb.Domain.Interfaces;
 using InputWeb.Infrastructure.Data;
+using InputWeb.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+//common
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+//usecases
+builder.Services.AddScoped<IRegisterUserUseCase, RegisterUseCase>();
+builder.Services.AddScoped<IAuthenticateUseCase, AuthenticateUseCase>();
+
 
 var jwtKey = builder.Configuration["Jwt:Key"]
     ?? throw new Exception("JWT Key not configured");

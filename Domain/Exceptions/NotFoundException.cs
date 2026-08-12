@@ -1,4 +1,4 @@
-namespace VitalSyncAPI.Domain.Exceptions;
+namespace InputWeb.Domain.Exceptions;
 
 public class NotFoundException : DomainException
 {
