@@ -1,0 +1,44 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Security.Claims;
+using InputWeb.Application.DTOs.Request;
+using InputWeb.Application.Interfaces;
+using InputWeb.Application.UseCases;
+
+namespace InputWeb.Controllers;
+
+//[Authorize] remover depois de testar ne pae
+[Route("Record")]
+public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IGetRecordByIdUseCase getRecordByIdUseCase,
+    GetRecordsUseCase getRecordsUseCase) : BaseController
+{
+    // [EnableRateLimiting("")]
+    [HttpPost]
+    public async Task<IActionResult> Upload([FromForm] RecordingDTO request)
+    {
+        await using var videoStream = request.Video.OpenReadStream();
+        await using var eventsStream = request.Events.OpenReadStream();
+
+        var id = await createRecordingUseCase.ExecuteAsync(UserId, request.ProjectName, videoStream, eventsStream);
+
+        return Ok(new { recordingId = id });
+    }
+
+    // [EnableRateLimiting("register")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetRecordById(Guid id)
+    {
+        var result = await getRecordByIdUseCase.ExecuteAsync(id);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetRecords()
+    {
+        var result = await getRecordsUseCase.ExecuteAsync();
+        return Ok(result);
+    }
+
+
+}

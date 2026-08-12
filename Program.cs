@@ -32,6 +32,8 @@ builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUseCase>();
 builder.Services.AddScoped<IAuthenticateUseCase, AuthenticateUseCase>();
 builder.Services.AddScoped<ICreateRecordingUseCase, CreateRecordingUseCase>();
+builder.Services.AddScoped<IGetRecordByIdUseCase, GetRecordByIdUseCase>();
+builder.Services.AddScoped<IGetRecordsUseCase, GetRecordsUseCase>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrWhiteSpace(jwtKey))
