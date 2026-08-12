@@ -9,6 +9,7 @@ public class Context : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    public DbSet<Recording> Recordings => Set<Recording>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

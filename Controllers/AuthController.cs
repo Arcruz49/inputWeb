@@ -7,7 +7,7 @@ using InputWeb.Application.Interfaces;
 
 namespace InputWeb.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("Auth")]
+[Route("Auth")]
 public class AuthController(IAuthenticateUseCase authenticateUseCase, IRegisterUserUseCase registerUseCase) : BaseController
 {
     // [EnableRateLimiting("login")]
