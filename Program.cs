@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnMessageReceived = ctx =>
             {
-                ctx.Token = ctx.Request.Cookies["vitalsync_token"];
+                ctx.Token = ctx.Request.Cookies["inputweb_token"];
                 return Task.CompletedTask;
             }
         };
