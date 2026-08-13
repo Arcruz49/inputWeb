@@ -11,7 +11,7 @@ namespace InputWeb.Controllers;
 [Authorize]
 [Route("Record")]
 public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IGetRecordByIdUseCase getRecordByIdUseCase,
-    GetRecordsUseCase getRecordsUseCase) : BaseController
+    IGetRecordsUseCase getRecordsUseCase) : BaseController
 {
     // [EnableRateLimiting("")]
     [HttpPost]

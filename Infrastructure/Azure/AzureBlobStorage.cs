@@ -8,6 +8,8 @@ public class AzureBlobStorage : IFileStorage
 {
     private readonly BlobContainerClient _container;
 
+    // tenho que validar se isso realmente funciona depois
+    // realizar testes para verificar as urls que estão sendo retornadas e os arquivos que estão sendo salvos
     public AzureBlobStorage(IConfiguration config)
     {
         var connectionString = config.GetConnectionString("BlobStorage")

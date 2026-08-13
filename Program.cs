@@ -35,6 +35,7 @@ builder.Services.AddScoped<ICreateRecordingUseCase, CreateRecordingUseCase>();
 builder.Services.AddScoped<IGetRecordByIdUseCase, GetRecordByIdUseCase>();
 builder.Services.AddScoped<IGetRecordsUseCase, GetRecordsUseCase>();
 
+
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrWhiteSpace(jwtKey))
     throw new Exception("JWT Key not configured");
