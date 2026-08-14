@@ -11,7 +11,7 @@ namespace InputWeb.Controllers;
 [Authorize]
 [Route("Record")]
 public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IGetRecordByIdUseCase getRecordByIdUseCase,
-    IGetRecordsUseCase getRecordsUseCase, IFileStorage fileStorage) : BaseController
+    IGetRecordsUseCase getRecordsUseCase, IGenerateDownloadUseCase generateDownloadUseCase) : BaseController
 {
     // [EnableRateLimiting("")]
     [HttpPost]
@@ -43,13 +43,9 @@ public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IG
     [HttpGet("{id}/download")]
     public async Task<IActionResult> GetDownloadLinks(Guid id)
     {
-        var record = await getRecordByIdUseCase.ExecuteAsync(id);
-        if (record is null) return NotFound();
+        var response = await generateDownloadUseCase.ExecuteAsync(id);
+        
 
-        var validFor = TimeSpan.FromMinutes(15);
-        var videoUrl = fileStorage.GenerateDownloadUrl($"{id}/video.mp4", validFor);
-        var eventsUrl = fileStorage.GenerateDownloadUrl($"{id}/events.txt", validFor);
-
-        return Ok(new { videoUrl, eventsUrl });
+        return Ok(new { response.url_video, response.url_events});
     }
 }

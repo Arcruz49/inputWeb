@@ -46,6 +46,7 @@ builder.Services.AddScoped<IAuthenticateUseCase, AuthenticateUseCase>();
 builder.Services.AddScoped<ICreateRecordingUseCase, CreateRecordingUseCase>();
 builder.Services.AddScoped<IGetRecordByIdUseCase, GetRecordByIdUseCase>();
 builder.Services.AddScoped<IGetRecordsUseCase, GetRecordsUseCase>();
+builder.Services.AddScoped<IGenerateDownloadUseCase, GenerateDownloadUseCase>();
 
 
 var jwtKey = builder.Configuration["Jwt:Key"];
