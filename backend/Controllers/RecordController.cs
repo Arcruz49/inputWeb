@@ -11,7 +11,7 @@ namespace InputWeb.Controllers;
 [Authorize]
 [Route("Record")]
 public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IGetRecordByIdUseCase getRecordByIdUseCase,
-    IGetRecordsUseCase getRecordsUseCase, IGenerateDownloadUseCase generateDownloadUseCase) : BaseController
+    IGetRecordsUseCase getRecordsUseCase, IGenerateDownloadUseCase generateDownloadUseCase, IDeleteRecordingUseCase deleteRecordingUseCase) : BaseController
 {
     // [EnableRateLimiting("")]
     [HttpPost]
@@ -44,8 +44,13 @@ public class RecordController(ICreateRecordingUseCase createRecordingUseCase, IG
     public async Task<IActionResult> GetDownloadLinks(Guid id)
     {
         var response = await generateDownloadUseCase.ExecuteAsync(id);
-        
-
         return Ok(new { response.url_video, response.url_events});
+    }
+
+    [HttpDelete("{id}/delete")]
+    public async Task<IActionResult> DeleteRecord(Guid id)
+    {
+        await deleteRecordingUseCase.ExecuteAsync(id);    
+        return NoContent();
     }
 }

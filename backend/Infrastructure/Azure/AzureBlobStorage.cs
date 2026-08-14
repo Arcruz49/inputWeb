@@ -46,4 +46,9 @@ public class AzureBlobStorage : IFileStorage
 
         return blobClient.GenerateSasUri(sasBuilder).ToString();
     }
+    public async Task DeleteAsync(string blobName)
+    {
+        var blobClient = _container.GetBlobClient(blobName);
+        await blobClient.DeleteIfExistsAsync();
+    }
 }
