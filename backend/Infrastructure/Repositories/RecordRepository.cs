@@ -10,11 +10,15 @@ public class RecordRepository(Context db) :IRecordRepository
 {
     public async Task<List<Recording>> GetRecords(string search = "")
     {
-        return await db.Recordings.AsNoTracking().Where(a => (a.ProjectName ?? "").Contains(search ?? "")).ToListAsync();
+        return await db.Recordings.AsNoTracking()
+            .Include(a => a.User)
+            .Where(a => (a.ProjectName ?? "").Contains(search ?? ""))
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync();
     }
     public async Task<Recording> GetRecordingById(Guid id)
     {
-        return await db.Recordings.Where(a => a.Id == id).FirstOrDefaultAsync() ?? throw new NotFoundException("Registro não encontrado");
+        return await db.Recordings.Include(a => a.User).Where(a => a.Id == id).FirstOrDefaultAsync() ?? throw new NotFoundException("Registro não encontrado");
     }
 
     public Recording CreateRecording(Recording recording)

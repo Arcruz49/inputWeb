@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using InputWeb.Domain.Exceptions;
 using InputWeb.Application.DTOs.Request;
 using InputWeb.Application.DTOs.Responses;
 using InputWeb.Application.Interfaces;

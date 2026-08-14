@@ -54,4 +54,18 @@ public class AuthController(IAuthenticateUseCase authenticateUseCase, IRegisterU
         var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return Ok(new { id, name });
     }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        var isHttps = Request.IsHttps;
+        Response.Cookies.Delete("inputweb_token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = isHttps,
+            SameSite = isHttps ? SameSiteMode.None : SameSiteMode.Lax
+        });
+
+        return NoContent();
+    }
 }

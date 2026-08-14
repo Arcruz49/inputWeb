@@ -5,14 +5,26 @@ using InputWeb.Application.UseCases;
 using InputWeb.Domain.Entities;
 using InputWeb.Domain.Interfaces;
 using InputWeb.Infrastructure.Data;
+using InputWeb.Infrastructure.Middlewares;
 using InputWeb.Infrastructure.Repositories;
 using InputWeb.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Gravações de tela passam fácil dos ~28 MB padrão do Kestrel; sem isso o upload volta 413.
+var maxUploadBytes = builder.Configuration.GetValue<long?>("Upload:MaxBytes") ?? 2L * 1024 * 1024 * 1024;
+
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = maxUploadBytes);
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = maxUploadBytes;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -79,7 +91,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

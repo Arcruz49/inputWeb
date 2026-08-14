@@ -1,7 +1,18 @@
 .claude
-/bin
-/obj
+
+# .NET
+*bin/
+*obj/
+
+# node / vite
+node_modules/
+dist/
+.vite/
+
+# segredos — nunca versionar
 appsettings.json
 appsettings.Development.json
 .env
+.env.local
+
 CLAUDE.md
