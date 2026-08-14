@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using InputWeb.Application.Interfaces;
 
 namespace InputWeb.Infrastructure.Storage;
@@ -25,5 +26,24 @@ public class AzureBlobStorage : IFileStorage
         var blob = _container.GetBlobClient(blobName);
         await blob.UploadAsync(content, new BlobHttpHeaders { ContentType = contentType });
         return blob.Uri.ToString();
+    }
+
+    public string GenerateDownloadUrl(string blobName, TimeSpan validFor)
+    {
+        var blobClient = _container.GetBlobClient(blobName);
+
+        if (!blobClient.CanGenerateSasUri)
+            throw new InvalidOperationException("Não é possível gerar SAS — verifique a autenticação.");
+
+        var sasBuilder = new BlobSasBuilder
+        {
+            BlobContainerName = _container.Name,
+            BlobName = blobName,
+            Resource = "b",
+            ExpiresOn = DateTimeOffset.UtcNow.Add(validFor)
+        };
+        sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        return blobClient.GenerateSasUri(sasBuilder).ToString();
     }
 }
