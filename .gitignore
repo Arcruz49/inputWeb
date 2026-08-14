@@ -9,7 +9,6 @@ node_modules/
 dist/
 .vite/
 
-# segredos — nunca versionar
 appsettings.json
 appsettings.Development.json
 .env
